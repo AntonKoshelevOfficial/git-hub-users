@@ -1,23 +1,22 @@
-import React, { useState, useCallback }  from 'react';
+import React from 'react';
 import './rootComponent.scss';
 import UserInfo from './components/userInfo/UserInfo';
 import UsersList from './components/usersList/UsersList';
+import * as selectors from './store/selectors';
+import { useAppSelector } from './hooks/hooks';
 
 const RootComponent: React.FC = () => {
-  const [isOpenUserInfo, setIsOpenUserInfo] = useState<boolean>(false);
-  const handleOnItemClick = useCallback(() => {
-      setIsOpenUserInfo(!isOpenUserInfo);
-  }, [])
+    const isOpenUserInfo: boolean = useAppSelector(selectors.getIsOpenUserInfo);
 
-  return (
+    return (
       <div className={'wrapper'}>
         {
           isOpenUserInfo
               ? <UserInfo/>
-              : <UsersList handleOnItemClick={handleOnItemClick}/>
+              : <UsersList/>
         }
       </div>
-  );
+    );
 }
 
 export default RootComponent;
