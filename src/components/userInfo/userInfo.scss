@@ -1,0 +1,28 @@
+.userInfoWrapper {
+  width: 600px;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  border: 1px solid black;
+  padding-top: 10px;
+  position: relative;
+}
+
+.userInfoTitle {
+  height: 50px;
+}
+
+.backArrowImage {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.6;
+  }
+}

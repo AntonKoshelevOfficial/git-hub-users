@@ -1,4 +1,8 @@
-export type UserItemType = {
+export type ActionType = {
+    type: string,
+    payload?: any,
+}
+export type UsersListItemType = {
     avatar_url: string,
     events_url: string,
     repos_count?: number,
@@ -18,8 +22,4 @@ export type UserItemType = {
     subscriptions_url: string,
     type: string,
     url: string,
-}
-
-export type TProps = {
-    handleOnItemClick: () => void,
 }
