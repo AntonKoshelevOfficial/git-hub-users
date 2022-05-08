@@ -1,29 +1,37 @@
-import ActionTypes from '../constants/actionTypes';
-import * as types from '../constants/globalTypes';
+import { UserActionTypes } from '../types/actionTypes';
+import * as globalTypes from '../types/globalTypes';
 
-export default (state: any, action: types.ActionType) => {
+const initialState: globalTypes.ApplicationState = {
+    users: [],
+    isNeedLoadData: true,
+    selectedUserId: null,
+    isOpenUserInfo: false,
+    userListSearchInputValue: '',
+}
+
+export default (state = initialState, action: globalTypes.ActionType): globalTypes.ApplicationState => {
     switch (action.type) {
-        case ActionTypes.SET_USERS:
+        case UserActionTypes.SET_USERS:
             return {
                 ...state,
                 users: action.payload,
             }
-        case ActionTypes.SET_IS_NEED_LOAD_DATA:
+        case UserActionTypes.SET_IS_NEED_LOAD_DATA:
             return {
                 ...state,
                 isNeedLoadData: action.payload,
             }
-        case ActionTypes.SET_IS_OPEN_USER_INFO:
+        case UserActionTypes.SET_IS_OPEN_USER_INFO:
             return {
                 ...state,
                 isOpenUserInfo: action.payload,
             }
-        case ActionTypes.SET_SELECTED_USER_ID:
+        case UserActionTypes.SET_SELECTED_USER_ID:
             return {
                 ...state,
                 selectedUserId: action.payload,
             }
-        case ActionTypes.SET_USER_LIST_SEARCH_INPUT_VALUE:
+        case UserActionTypes.SET_USER_LIST_SEARCH_INPUT_VALUE:
             return {
                 ...state,
                 userListSearchInputValue: action.payload,

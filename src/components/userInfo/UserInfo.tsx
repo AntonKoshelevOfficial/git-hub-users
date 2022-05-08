@@ -10,10 +10,11 @@ import {
     useAppSelector,
 } from '../../hooks/hooks';
 import * as selectors from '../../store/selectors';
-import * as globalTypes from '../../constants/globalTypes';
+import * as globalTypes from '../../types/globalTypes';
 import * as actions from '../../store/actions';
 import * as constants from '../../constants/constants';
-import {sendGetRequest} from '../../helpers/requestSender';
+import { sendGetRequest } from '../../helpers/requestSender';
+import { UserActionTypes } from '../../types/actionTypes';
 
 const initialState = {
     id: 0,
@@ -40,19 +41,19 @@ const initialState = {
 };
 
 const UserInfo: React.FC = () => {
-    const [selectedUserDetailInfo, setSelectedUserDetailInfo] = useState<globalTypes.UsersListItemType>(initialState);
-    const [inputValue, setInputValue] = useState<string>('');
-    const [filteredValue, setFilteredValue] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [ selectedUserDetailInfo, setSelectedUserDetailInfo ] = useState<globalTypes.UsersListItemType>(initialState);
+    const [ inputValue, setInputValue ] = useState<string>('');
+    const [ filteredValue, setFilteredValue ] = useState<string>('');
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
     const users: globalTypes.UsersListItemType[] = useAppSelector(selectors.getUsers);
     const isOpenUserInfo: boolean = useAppSelector(selectors.getIsOpenUserInfo);
-    const selectedUserId: number = useAppSelector(selectors.getSelectedUserId);
-    const dispatchAction: (payload: globalTypes.ActionType) => void = useAppDispatch();
+    const selectedUserId: null | number = useAppSelector(selectors.getSelectedUserId);
+    const dispatchAction: (payload: { payload: boolean; type: UserActionTypes }) => void = useAppDispatch();
     const selectedUserData: globalTypes.UsersListItemType = users.filter((user: globalTypes.UsersListItemType) => user.id === selectedUserId)?.[0];
-    const [isPending, startTransition] = useTransition();
+    const [ isPending, startTransition ] = useTransition();
 
     const filteredRepos = useMemo(() => {
-        return selectedUserData.repos_list.filter(repo => repo.name.toLocaleLowerCase().includes(filteredValue))
+        return selectedUserData.repos_list?.filter((repo: globalTypes.ReposListType) => repo.name.toLocaleLowerCase().includes(filteredValue))
     }, [filteredValue])
     const handleOnArrowBackClick = (): void => {
         dispatchAction(actions.setIsOpenUserInfo(!isOpenUserInfo));
@@ -142,14 +143,14 @@ const UserInfo: React.FC = () => {
                             <div className={'repositoriesList'}>
                                 {
                                     isPending
-                                    || !filteredRepos.length
+                                    || !filteredRepos?.length
                                         ? <div className={'pending'}>
                                             {isPending
                                                 ? 'Pending...'
                                                 : `No repository named "${inputValue}"`
                                             }
                                         </div>
-                                        : filteredRepos.map(repo => (
+                                        : filteredRepos.map((repo: globalTypes.ReposListType) => (
                                             <div
                                                 key={repo.id}
                                                 onClick={() => handleOnRepoItemClick(repo.html_url)}
