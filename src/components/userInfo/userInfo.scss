@@ -1,17 +1,15 @@
 .userInfoWrapper {
   width: 600px;
   height: 800px;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
+  display: grid;
+  grid-template-rows: 1fr 6fr 1fr 12fr;
   border: 1px solid black;
   padding-top: 10px;
   position: relative;
 }
 
 .userInfoTitle {
-  height: 50px;
+  justify-self: center;
 }
 
 .backArrowImage {
@@ -25,4 +23,48 @@
   &:hover {
     opacity: 0.6;
   }
+}
+
+.userInfoMainData {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.userInfoImage {
+  height: 210px;
+  width: 210px;
+}
+
+.userInfoImageContainer {
+  align-self: center;
+  justify-self: center;
+}
+
+.userInfoDataContainer {
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  font-size: 24px;
+
+  div {
+    align-self: end;
+  }
+}
+
+.userInfoRepositoriesData {
+  width: 100%;
+  background-color: #bdab99;
+}
+
+.userInfoLoadingText {
+  height: 100%;
+  width: 100%;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.userInfoBiography {
+  padding: 0 20px;
 }

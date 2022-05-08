@@ -30,7 +30,7 @@
   min-height: 75px;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 4fr 1.5fr;
+  grid-template-columns: 1.3fr 4fr 2fr;
   grid-gap: 30px;
   border-bottom: 1px solid black;
   cursor: pointer;
@@ -70,4 +70,13 @@
   &::placeholder {
     color: black;
   }
+}
+
+.userListLoadingText {
+  height: 100%;
+  width: 100%;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

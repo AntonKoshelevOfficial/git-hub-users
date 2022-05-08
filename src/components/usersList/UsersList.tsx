@@ -3,7 +3,6 @@ import React, {
     useEffect,
 } from 'react';
 import './usersList.scss';
-import axios from 'axios';
 import * as globalTypes from '../../constants/globalTypes';
 import {
     useAppDispatch,
@@ -14,45 +13,70 @@ import * as selectors from '../../store/selectors';
 import * as constants from '../../constants/constants';
 import {
     sendGetRequest,
-    getUserWithReposCountRequest,
+    getUsersRepositoriesRequest,
 } from '../../helpers/requestSender';
-import {log} from "util";
+import { useDebounce } from 'use-debounce';
 
 const UsersList: React.FC = () => {
-    const [ inputValue, setInputValue ] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const users: globalTypes.UsersListItemType[] = useAppSelector(selectors.getUsers);
     const isOpenUserInfo: boolean = useAppSelector(selectors.getIsOpenUserInfo);
+    const isNeedLoadData: boolean = useAppSelector(selectors.getIsNeedLoadData);
+    const userListSearchInputValue: string = useAppSelector(selectors.getUserListSearchValue);
     const dispatchAction: (payload: globalTypes.ActionType) => void = useAppDispatch();
+    const [ value ] = useDebounce<string>(userListSearchInputValue, 500)
 
     const handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
-        setInputValue(event.currentTarget.value);
+        dispatchAction(actions.setUserListSearchInputValue(event.currentTarget.value));
     };
-    const handleOnItemClick = (): void => {
+    const handleOnItemClick = (userId: number): void => {
         dispatchAction(actions.setIsOpenUserInfo(!isOpenUserInfo));
+        dispatchAction(actions.setSelectedUserId(userId));
     };
 
     useEffect(() => {
-        sendGetRequest(`${constants.GIT_HUB_API_URL}users?per_page=2`)
-            .then(response => getUserWithReposCountRequest(response)
-                .then(response => dispatchAction(actions.setUsers(response))));
-    }, [])
+        if (isNeedLoadData) {
+            setIsLoading(true)
+
+            if (!value.length) {
+                sendGetRequest(`${constants.GIT_HUB_API_URL}users`)
+                    .then(response => getUsersRepositoriesRequest(response)
+                        .then(response => {
+                            dispatchAction(actions.setUsers(response))
+                            setIsLoading(false)
+                        }));
+            } else {
+                sendGetRequest(`${constants.GIT_HUB_API_URL}search/users?q=${value}&page=1`)
+                    .then(response => getUsersRepositoriesRequest(response?.items)
+                        .then(response => {
+                            dispatchAction(actions.setUsers(response))
+                            setIsLoading(false)
+                        }));
+            }
+        } else {
+            dispatchAction(actions.setIsNeedLoadData(true))
+            setIsLoading(false)
+        }
+    }, [value])
 
     return (
         <div className={'userListWrapper'}>
             <h1 className={'userListTitle'}>GitHub Searcher</h1>
             <input
                 type={'text'}
-                value={inputValue}
+                value={userListSearchInputValue}
                 onChange={handleOnChange}
                 className={'userSearch'}
                 placeholder={'Search for Users'}
             />
-            <div className={'usersList'}>
+            {
+                !isLoading
+                    ? <div className={'usersList'}>
                 {
                     users.map(item => (
                         <div
                             key={item.id}
-                            onClick={handleOnItemClick}
+                            onClick={() => handleOnItemClick(item.id)}
                             className={'itemWrapper'}
                         >
                             <img
@@ -66,6 +90,8 @@ const UsersList: React.FC = () => {
                     ))
                 }
             </div>
+                : <div className={'userListLoadingText'}> LOADING... </div>
+            }
         </div>
     );
 };
