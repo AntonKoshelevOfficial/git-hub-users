@@ -18,7 +18,7 @@ import {
 import { useDebounce } from 'use-debounce';
 
 const UsersList: React.FC = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
     const users: globalTypes.UsersListItemType[] = useAppSelector(selectors.getUsers);
     const isOpenUserInfo: boolean = useAppSelector(selectors.getIsOpenUserInfo);
     const isNeedLoadData: boolean = useAppSelector(selectors.getIsNeedLoadData);

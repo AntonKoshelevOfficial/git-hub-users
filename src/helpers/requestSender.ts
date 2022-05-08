@@ -4,7 +4,7 @@ import * as globalTypes from './../constants/globalTypes';
 export const sendGetRequest = async (path: string) => {
     return await axios.get(path, {
             'headers': {
-                'Authorization': `token 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`,
+                'Authorization': `token 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`,
             },
         })
         .then(response => response.data)
@@ -16,7 +16,7 @@ export const getUsersRepositoriesRequest = async (array: Array<globalTypes.Users
     await Promise.all(array.map(item =>
         axios.get(`${item.repos_url}?per_page=100`, {
             'headers': {
-                'Authorization': `token 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`,
+                'Authorization': `token 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`,
             },
         })
             .then(response => {
