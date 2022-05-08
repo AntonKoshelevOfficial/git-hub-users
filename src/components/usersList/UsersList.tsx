@@ -3,7 +3,7 @@ import React, {
     useEffect,
 } from 'react';
 import './usersList.scss';
-import * as globalTypes from '../../constants/globalTypes';
+import * as globalTypes from '../../types/globalTypes';
 import {
     useAppDispatch,
     useAppSelector,
@@ -16,6 +16,7 @@ import {
     getUsersRepositoriesRequest,
 } from '../../helpers/requestSender';
 import { useDebounce } from 'use-debounce';
+import { UserActionTypes } from '../../types/actionTypes';
 
 const UsersList: React.FC = () => {
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
@@ -23,7 +24,7 @@ const UsersList: React.FC = () => {
     const isOpenUserInfo: boolean = useAppSelector(selectors.getIsOpenUserInfo);
     const isNeedLoadData: boolean = useAppSelector(selectors.getIsNeedLoadData);
     const userListSearchInputValue: string = useAppSelector(selectors.getUserListSearchValue);
-    const dispatchAction: (payload: globalTypes.ActionType) => void = useAppDispatch();
+    const dispatchAction: (payload: { payload: any; type: UserActionTypes }) => void = useAppDispatch();
     const [ value ] = useDebounce<string>(userListSearchInputValue, 500)
 
     const handleOnChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -40,15 +41,15 @@ const UsersList: React.FC = () => {
 
             if (!value.length) {
                 sendGetRequest(`${constants.GIT_HUB_API_URL}users`)
-                    .then(response => getUsersRepositoriesRequest(response)
-                        .then(response => {
+                    .then((response: globalTypes.UsersListItemType[]) => getUsersRepositoriesRequest(response)
+                        .then((response: globalTypes.UsersListItemType[]) => {
                             dispatchAction(actions.setUsers(response))
                             setIsLoading(false)
                         }));
             } else {
                 sendGetRequest(`${constants.GIT_HUB_API_URL}search/users?q=${value}&page=1`)
-                    .then(response => getUsersRepositoriesRequest(response?.items)
-                        .then(response => {
+                    .then((response: any) => getUsersRepositoriesRequest(response?.items)
+                        .then((response: globalTypes.UsersListItemType[]) => {
                             dispatchAction(actions.setUsers(response))
                             setIsLoading(false)
                         }));
@@ -76,7 +77,7 @@ const UsersList: React.FC = () => {
                     users.map(item => (
                         <div
                             key={item.id}
-                            onClick={() => handleOnItemClick(item.id)}
+                            onClick={(): void => handleOnItemClick(item.id)}
                             className={'itemWrapper'}
                         >
                             <img
