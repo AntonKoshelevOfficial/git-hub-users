@@ -1,0 +1,82 @@
+.userListWrapper {
+  width: 600px;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  border: 1px solid black;
+  padding-top: 10px;
+}
+
+.userListTitle {
+  height: 50px;
+}
+
+.usersList {
+  height: 700px;
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  margin-top: 10px;
+  overflow-y: auto;
+  border-top: 1px solid black;
+}
+
+.itemWrapper {
+  min-height: 75px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.3fr 4fr 2fr;
+  grid-gap: 30px;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+
+  &:hover {
+    background-color: aliceblue;
+  }
+}
+
+.userImage {
+  width: 60px;
+  height: 60px;
+  align-self: center;
+  justify-self: center;
+}
+
+.userName {
+  font-size: 24px;
+  align-self: center;
+}
+
+.repositoriesCount {
+  font-size: 24px;
+  align-self: center;
+}
+
+.userSearch {
+  width: 90%;
+  height: 50px;
+  font-size: 24px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  border: 1px solid black;
+
+  &::placeholder {
+    color: black;
+  }
+}
+
+.userListLoadingText {
+  height: 100%;
+  width: 100%;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
