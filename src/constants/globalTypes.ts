@@ -3,6 +3,14 @@ export type ActionType = {
     payload?: any,
 }
 
+export type ReposListType = {
+    id: number,
+    name: string,
+    html_url: string,
+    forks_count: number,
+    stargazers_count: number,
+}
+
 export type UsersListItemType = {
     id: number,
     url: string,
@@ -18,10 +26,10 @@ export type UsersListItemType = {
     site_admin: boolean,
     avatar_url: string,
     events_url: string,
+    repos_list: ReposListType[],
     created_at?: string,
     starred_url: string,
     gravatar_id: string,
-    repos_list?: string,
     repos_count?: number,
     followers_url: string,
     following_url: string,

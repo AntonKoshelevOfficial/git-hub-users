@@ -1,4 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {
+    useMemo,
+    useState,
+    useEffect,
+    useTransition,
+} from 'react';
 import './userInfo.scss';
 import {
     useAppDispatch,
@@ -20,7 +25,7 @@ const initialState = {
     gists_url: '',
     repos_url: '',
     avatar_url: '',
-    repos_list: '',
+    repos_list: [],
     site_admin: false,
     events_url: '',
     created_at: '',
@@ -36,17 +41,32 @@ const initialState = {
 
 const UserInfo: React.FC = () => {
     const [selectedUserDetailInfo, setSelectedUserDetailInfo] = useState<globalTypes.UsersListItemType>(initialState);
+    const [inputValue, setInputValue] = useState<string>('');
+    const [filteredValue, setFilteredValue] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const users: globalTypes.UsersListItemType[] = useAppSelector(selectors.getUsers);
     const isOpenUserInfo: boolean = useAppSelector(selectors.getIsOpenUserInfo);
     const selectedUserId: number = useAppSelector(selectors.getSelectedUserId);
     const dispatchAction: (payload: globalTypes.ActionType) => void = useAppDispatch();
-    const selectedUserData: globalTypes.UsersListItemType = users.filter((user: globalTypes.UsersListItemType) => user.id === selectedUserId)?.[0]
+    const selectedUserData: globalTypes.UsersListItemType = users.filter((user: globalTypes.UsersListItemType) => user.id === selectedUserId)?.[0];
+    const [isPending, startTransition] = useTransition();
 
-    const handleOnItemClick = (): void => {
+    const filteredRepos = useMemo(() => {
+        return selectedUserData.repos_list.filter(repo => repo.name.toLocaleLowerCase().includes(filteredValue))
+    }, [filteredValue])
+    const handleOnArrowBackClick = (): void => {
         dispatchAction(actions.setIsOpenUserInfo(!isOpenUserInfo));
         dispatchAction(actions.setIsNeedLoadData(false))
     };
+    const handleOnRepoItemClick = (repoUrl: string): void => {
+        window.open(repoUrl, '_blank');
+    }
+    const handleOnChange = (event: React.FormEvent<HTMLInputElement>): void => {
+        setInputValue(event.currentTarget.value)
+        startTransition(() => {
+            setFilteredValue(event.currentTarget.value)
+        })
+    }
 
     useEffect(() => {
         sendGetRequest(`${constants.GIT_HUB_API_URL}users/${selectedUserData.login}`)
@@ -56,7 +76,6 @@ const UserInfo: React.FC = () => {
                         sendGetRequest(response.following_url.split('{')?.[0])
                             .then(following => {
                                 setSelectedUserDetailInfo({
-                                    ...selectedUserData,
                                     ...response,
                                     created_at: new Date(response.created_at).toLocaleString(),
                                     followers_count: followers.length,
@@ -73,7 +92,7 @@ const UserInfo: React.FC = () => {
             <img
                 src={constants.BACK_ARROW_ICON_URL}
                 alt={'back'}
-                onClick={handleOnItemClick}
+                onClick={handleOnArrowBackClick}
                 className={'backArrowImage'}
             />
             <h1 className={'userInfoTitle'}>GitHub Searcher</h1>
@@ -102,10 +121,10 @@ const UserInfo: React.FC = () => {
                                     {selectedUserDetailInfo.created_at}
                                 </div>
                                 <div className={'userInfoFollowers'}>
-                                    {selectedUserDetailInfo.followers_count}
+                                    {selectedUserDetailInfo.followers_count} Followers
                                 </div>
                                 <div className={'userInfoFollowing'}>
-                                    {selectedUserDetailInfo.following_count}
+                                    Following {selectedUserDetailInfo.following_count}
                                 </div>
                             </div>
                         </div>
@@ -113,7 +132,38 @@ const UserInfo: React.FC = () => {
                             {selectedUserDetailInfo.bio}
                         </div>
                         <div className={'userInfoRepositoriesData'}>
-
+                            <input
+                                type={'text'}
+                                value={inputValue}
+                                onChange={handleOnChange}
+                                className={'repositoriesSearch'}
+                                placeholder={'Search for User Repositories'}
+                            />
+                            <div className={'repositoriesList'}>
+                                {
+                                    isPending
+                                    || !filteredRepos.length
+                                        ? <div className={'pending'}>
+                                            {isPending
+                                                ? 'Pending...'
+                                                : `No repository named "${inputValue}"`
+                                            }
+                                        </div>
+                                        : filteredRepos.map(repo => (
+                                            <div
+                                                key={repo.id}
+                                                onClick={() => handleOnRepoItemClick(repo.html_url)}
+                                                className={'repoItemWrapper'}
+                                            >
+                                                <div className={'repoName'}>{repo.name}</div>
+                                                <div className={'repoInfo'}>
+                                                    <div className={'repoForks'}>{repo.forks_count} Forks</div>
+                                                    <div className={'repoStars'}>{repo.stargazers_count} Stars</div>
+                                                </div>
+                                            </div>
+                                        ))
+                                }
+                            </div>
                         </div>
                     </>)
                     : <div className={'userInfoLoadingText'}> LOADING... </div>

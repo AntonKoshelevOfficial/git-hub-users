@@ -2,7 +2,7 @@
   width: 600px;
   height: 800px;
   display: grid;
-  grid-template-rows: 1fr 6fr 1fr 12fr;
+  grid-template-rows: 1fr 6fr 1.5fr 11fr;
   border: 1px solid black;
   padding-top: 10px;
   position: relative;
@@ -52,8 +52,11 @@
 }
 
 .userInfoRepositoriesData {
+  max-height: 470px;
   width: 100%;
-  background-color: #bdab99;
+  display: grid;
+  grid-template-rows: 1fr 9fr;
+  font-size: 22px;
 }
 
 .userInfoLoadingText {
@@ -67,4 +70,63 @@
 
 .userInfoBiography {
   padding: 0 20px;
+  align-self: center;
+}
+
+.repositoriesSearch {
+  width: 90%;
+  height: 50px;
+  font-size: 24px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  border: 1px solid black;
+  justify-self: center;
+  align-items: center;
+
+  &::placeholder {
+    color: black;
+  }
+}
+
+.repositoriesList {
+  width: 100%;
+  margin-top: 10px;
+  overflow-y: auto;
+  border-top: 1px solid black;
+}
+
+.repoItemWrapper {
+  height: 75px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  grid-gap: 10px;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+  padding: 0 10px;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: aliceblue;
+  }
+}
+
+.repoInfo {
+  align-self: center;
+}
+
+.repoName {
+  font-size: 24px;
+  align-self: center;
+}
+
+.pending {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
 }
