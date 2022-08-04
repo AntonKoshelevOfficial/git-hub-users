@@ -73,24 +73,24 @@ const UsersList: React.FC = () => {
             {
                 !isLoading
                     ? <div className={'usersList'}>
-                {
-                    users.map(item => (
-                        <div
-                            key={item.id}
-                            onClick={(): void => handleOnItemClick(item.id)}
-                            className={'itemWrapper'}
-                        >
-                            <img
-                                src={item.avatar_url}
-                                alt={'avatar'}
-                                className={'userImage'}
-                            />
-                            <div className={'userName'}>{item.login}</div>
-                            <div className={'repositoriesCount'}>Repo: #{item.repos_count}</div>
-                        </div>
-                    ))
-                }
-            </div>
+                        {
+                            users.map(item => (
+                                <div
+                                    key={item.id}
+                                    onClick={(): void => handleOnItemClick(item.id)}
+                                    className={'itemWrapper'}
+                                >
+                                    <img
+                                        src={item.avatar_url}
+                                        alt={'avatar'}
+                                        className={'userImage'}
+                                    />
+                                    <div className={'userName'}>{item.login}</div>
+                                    <div className={'repositoriesCount'}>Repo: #{item.repos_count}</div>
+                                </div>
+                            ))
+                        }
+                    </div>
                 : <div className={'userListLoadingText'}> LOADING... </div>
             }
         </div>

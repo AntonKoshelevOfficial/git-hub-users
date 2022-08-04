@@ -9,7 +9,7 @@ const initialState: globalTypes.ApplicationState = {
     userListSearchInputValue: '',
 }
 
-export default (state = initialState, action: globalTypes.ActionType): globalTypes.ApplicationState => {
+export default (state: globalTypes.ApplicationState = initialState, action: globalTypes.ActionType): globalTypes.ApplicationState => {
     switch (action.type) {
         case UserActionTypes.SET_USERS:
             return {
